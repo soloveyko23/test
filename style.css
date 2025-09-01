@@ -1,6 +1,6 @@
-/* Minimal Custom Styles */
 
-/* Sidebar Transitions */
+
+
 #sidebar span {
     transition: opacity 0.3s ease;
 }
@@ -13,7 +13,7 @@
     transition: transform 0.3s ease;
 }
 
-/* Mobile Styles */
+
 @media (max-width: 1023px) {
     #main-content {
         margin-left: 0 !important;
@@ -28,12 +28,12 @@
     }
 }
 
-/* Section Visibility */
+
 .section-hidden {
     display: none;
 }
 
-/* Custom Select Styles */
+
 .custom-select-container {
     position: relative;
     user-select: none;
@@ -108,18 +108,18 @@
     color: #000;
 }
 
-/* Animation for dropdown arrow */
+
 .custom-select-trigger svg {
     transition: transform 0.2s ease;
 }
 
-/* Focus ring for better accessibility */
+
 .custom-select-trigger:focus-visible {
     outline: 2px solid #facc15;
     outline-offset: 2px;
 }
 
-/* Loading Spinner */
+
 .loading-spinner {
     width: 20px;
     height: 20px;
@@ -134,7 +134,7 @@
     100% { transform: rotate(360deg); }
 }
 
-/* Notification Styles */
+
 .notification {
   position: fixed;
   top: 1rem;
@@ -159,7 +159,7 @@
   }
 }
 
-/* Recent Cryptos Animation */
+
 .recent-cryptos {
     animation: fadeIn 0.3s ease-in-out;
 }
@@ -179,7 +179,7 @@
     transform: translateY(-1px);
 }
 
-/* Step Sections */
+
 .step-section {
     display: block;
 }
@@ -196,7 +196,7 @@
     display: block;
 }
 
-/* Address Box */
+
 .address-box {
     background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
 }
@@ -211,7 +211,7 @@
     100% { transform: scale(1); }
 }
 
-/* Scrollbar Styles */
+
 ::-webkit-scrollbar {
     width: 6px;
 }
@@ -242,7 +242,7 @@
     border-radius: 2px;
 }
 
-/* noUiSlider Styles */
+
 .noUi-target {
     background: #232323 !important;
     border: 1px solid #232323 !important;
