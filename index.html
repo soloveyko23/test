@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deposit & Withdraw Forms</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .section-hidden {
+      display: none !important;
+    }
+    .copy-success {
+      background-color: #22c55e !important;
+      color: white !important;
+    }
+    .loading-spinner {
+      border: 2px solid #f3f3f3;
+      border-top: 2px solid #facc15;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body class="bg-black text-white font-sans">
+  <!-- Mobile Sidebar Toggle -->
+  <button class="mobile-sidebar-toggle lg:hidden" id="mobile-sidebar-toggle">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+  </button>
+
+  <!-- Sidebar -->
+  <div id="sidebar"
+    class="fixed left-0 top-0 h-screen w-60 bg-transparent transition-all duration-300 ease-in-out z-50 -translate-x-full lg:translate-x-0">
+    <div class="flex flex-col h-full relative group pt-16">
+      <!-- Navigation -->
+      <nav class="flex-1 p-4 space-y-2">
+        <!-- Deposit -->
+        <button
+          class="w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200 group relative text-[rgba(235,236,245,0.4)] hover:text-white"
+          data-section="deposit">
+          <div class="flex-shrink-0">
+            <svg class="w-6 h-6" viewBox="0 0 800 800" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M766.667 133.333C766.667 78.105 721.897 33.3334 666.667 33.3334H133.333C78.105 33.3334 33.3334 78.105 33.3334 133.333V466.667C33.3334 521.897 78.105 566.667 133.333 566.667H166.667C185.076 566.667 200 551.743 200 533.333C200 514.923 185.076 500 166.667 500H133.333C114.924 500 100 485.077 100 466.667V266.667H700V466.667C700 485.077 685.077 500 666.667 500H633.333C614.923 500 600 514.923 600 533.333C600 551.743 614.923 566.667 633.333 566.667H666.667C721.897 566.667 766.667 521.897 766.667 466.667V133.333ZM700 200V133.333C700 114.924 685.077 100 666.667 100H133.333C114.924 100 100 114.924 100 133.333V200H700Z"
+                fill="currentColor" />
+              <path
+                d="M433.333 733.333C433.333 751.743 418.41 766.667 400 766.667C381.59 766.667 366.667 751.743 366.667 733.333V546.897L323.571 589.987C310.552 603.01 289.449 603.01 276.43 589.987C263.413 576.977 263.413 555.867 276.43 542.853L376.413 443.077C389.433 430.08 410.52 430.093 423.53 443.1L523.5 543.073C536.52 556.093 536.52 577.197 523.5 590.217C510.483 603.23 489.377 603.23 476.36 590.217L433.333 547.19V733.333Z"
+                fill="currentColor" />
+            </svg>
+          </div>
+          <span class="font-medium transition-opacity duration-300">Deposit</span>
+        </button>
+
+        <!-- Withdraw -->
+        <button
+          class="w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200 group relative text-[rgba(235,236,245,0.4)] hover:text-white "
+          data-section="withdraw">
+          <div class="flex-shrink-0">
+            <svg class="w-6 h-6" viewBox="0 0 800 800" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M766.667 133.333C766.667 78.105 721.897 33.3334 666.667 33.3334H133.333C78.105 33.3334 33.3333 78.105 33.3333 133.333V466.667C33.3333 521.897 78.105 566.667 133.333 566.667H166.667C185.076 566.667 200 551.743 200 533.333C200 514.923 185.076 500 166.667 500H133.333C114.924 500 100 485.077 100 466.667V266.667H700V466.667C700 485.077 685.077 500 666.667 500H633.333C614.923 500 600 514.923 600 533.333C600 551.743 614.923 566.667 633.333 566.667H666.667C721.897 566.667 766.667 521.897 766.667 466.667V133.333ZM700 200V133.333C700 114.924 685.077 100 666.667 100H133.333C114.924 100 100 114.924 100 133.333V200H700Z"
+                fill="currentColor" />
+              <path
+                d="M366.599 466.67C366.599 448.26 381.522 433.337 399.932 433.337C418.342 433.337 433.266 448.26 433.266 466.67V653.107L476.361 610.017C489.38 596.994 510.484 596.994 523.503 610.017C536.519 623.027 536.519 644.137 523.503 657.15L423.519 756.927C410.499 769.924 389.412 769.91 376.402 756.904L276.432 656.93C263.412 643.91 263.412 622.807 276.432 609.787C289.449 596.774 310.556 596.774 323.572 609.787L366.599 652.814V466.67Z"
+                fill="currentColor" />
+            </svg>
+          </div>
+          <span class="font-medium transition-opacity duration-300">Withdraw</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Toggle Button -->
+      <div
+        class="absolute -right-5 top-0 h-full cursor-pointer px-5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+        <div class="h-full w-[1px] bg-[#232323]">
+          <div
+            class="absolute right-1 top-[30px] flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[#232323] bg-[#111111] p-1 transition-all duration-200 hover:bg-[#1a1a1a] z-20"
+            id="sidebar-toggle">
+            <svg class="w-5 h-5 text-[#666] transition-transform duration-300" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="transition-all duration-300 ease-in-out ml-60" id="main-content">
+    <!-- Mobile Tabs -->
+    <div class="lg:hidden bg-[#111111] border-b border-[#232323] sticky top-0 z-40">
+      <div class="flex">
+        <button class="flex-1 py-4 px-6 text-center text-sm font-medium transition-all duration-200 text-[rgba(235,236,245,0.4)] hover:text-white hover:bg-[#1a1a1a]/30 border-b-2 border-transparent mobile-tab" data-section="deposit">
+          <div class="flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 800 800" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M766.667 133.333C766.667 78.105 721.897 33.3334 666.667 33.3334H133.333C78.105 33.3334 33.3334 78.105 33.3334 133.333V466.667C33.3334 521.897 78.105 566.667 133.333 566.667H166.667C185.076 566.667 200 551.743 200 533.333C200 514.923 185.076 500 166.667 500H133.333C114.924 500 100 485.077 100 466.667V266.667H700V466.667C700 485.077 685.077 500 666.667 500H633.333C614.923 500 600 514.923 600 533.333C600 551.743 614.923 566.667 633.333 566.667H666.667C721.897 566.667 766.667 521.897 766.667 466.667V133.333ZM700 200V133.333C700 114.924 685.077 100 666.667 100H133.333C114.924 100 100 114.924 100 133.333V200H700Z"
+                fill="currentColor" />
+              <path
+                d="M433.333 733.333C433.333 751.743 418.41 766.667 400 766.667C381.59 766.667 366.667 751.743 366.667 733.333V546.897L323.571 589.987C310.552 603.01 289.449 603.01 276.43 589.987C263.413 576.977 263.413 555.867 276.43 542.853L376.413 443.077C389.433 430.08 410.52 430.093 423.53 443.1L523.5 543.073C536.52 556.093 536.52 577.197 523.5 590.217C510.483 603.23 489.377 603.23 476.36 590.217L433.333 547.19V733.333Z"
+                fill="currentColor" />
+            </svg>
+            <span>Deposit</span>
+          </div>
+        </button>
+        <button class="flex-1 py-4 px-6 text-center text-sm font-medium transition-all duration-200 text-[rgba(235,236,245,0.4)] hover:text-white hover:bg-[#1a1a1a]/30 border-b-2 border-transparent mobile-tab" data-section="withdraw">
+          <div class="flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 800 800" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M766.667 133.333C766.667 78.105 721.897 33.3334 666.667 33.3334H133.333C78.105 33.3334 33.3333 78.105 33.3333 133.333V466.667C33.3333 521.897 78.105 566.667 133.333 566.667H166.667C185.076 566.667 200 551.743 200 533.333C200 514.923 185.076 500 166.667 500H133.333C114.924 500 100 485.077 100 466.667V266.667H700V466.667C700 485.077 685.077 500 666.667 500H633.333C614.923 500 600 514.923 600 533.333C600 551.743 614.923 566.667 633.333 566.667H666.667C721.897 566.667 766.667 521.897 766.667 466.667V133.333ZM700 200V133.333C700 114.924 685.077 100 666.667 100H133.333C114.924 100 100 114.924 100 133.333V200H700Z"
+                fill="currentColor" />
+              <path
+                d="M366.599 466.67C366.599 448.26 381.522 433.337 399.932 433.337C418.342 433.337 433.266 448.26 433.266 466.67V653.107L476.361 610.017C489.38 596.994 510.484 596.994 523.503 610.017C536.519 623.027 536.519 644.137 523.503 657.15L423.519 756.927C410.499 769.924 389.412 769.91 376.402 756.904L276.432 656.93C263.412 643.91 263.412 622.807 276.432 609.787C289.449 596.774 310.556 596.774 323.572 609.787L366.599 652.814V466.67Z"
+                fill="currentColor" />
+            </svg>
+            <span>Withdraw</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Deposit Section -->
+    <div id="deposit-section">
+      <div class="lg:p-6 p-4">
+        <!-- Breadcrumb -->
+        <div class="text-xs text-gray-400 mb-2 flex items-center gap-2">
+          <a href="#"
+            class="text-xs font-normal cursor-pointer leading-[18px] text-[rgba(235,236,245,0.4)] hover:text-white transition-colors duration-200">Overview</a>
+          <span class="text-[rgba(235,236,245,0.4)]">/</span>
+          <a href="#"
+            class="text-xs font-normal cursor-pointer leading-[18px] text-white transition-colors duration-200" id="breadcrumb-section">Deposit</a>
+        </div>
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+          <h1 class="text-3xl font-bold text-white" id="page-title">Deposit</h1>
+          <a href="#" class="text-[#facc15] hover:text-[#e6b800] text-sm flex items-center gap-1 font-medium">
+            Buy Crypto
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Main Form Section -->
+          <div class="lg:col-span-2">
+            <!-- Deposit Form -->
+            <div class="rounded-lg lg:p-6 lg:mb-6 mb-14">
+  
+              <!-- Step 1: Select Crypto -->
+              <div
+                class="step-section mb-4 after:border-[#3c3d3d] after:absolute after:left-[10px] relative after:top-[22px] after:h-[calc(100%+10px)] after:border-l after:border-dashed"
+                id="step-1">
+                <label class="flex items-center font-medium mb-2 gap-3 text-[18px] leading-[24px] text-white">
+                  <span
+                    class="step-indicator flex h-5 w-5 items-end justify-center rounded-full text-center text-[14px] font-medium leading-[18px] border-[1px] border-[#3c3d3d] text-[#3c3d3d] bg-[#111111] z-[5]">1</span>
+                  Select Crypto
+                </label>
+                <div class="step-content ml-8" id="step-1-content">
+                  <div class="custom-select-container relative">
+                    <div class="relative">
+                      <div class="absolute left-3 top-1/2 transform -translate-y-1/2 z-10">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                      </div>
+                      <input type="text" placeholder="Select crypto you want to deposit"
+                        class="crypto-search-input h-11 cursor-pointer hover:bg-[#1a1a1a] hover:border-[#3c3d3d] w-full bg-[#0f0f0f] border border-[#232323] rounded px-10 py-2 pr-10 text-sm text-white font-medium focus:border-[#facc15] focus:outline-none transition-colors duration-200"
+                        data-select="crypto-select" role="combobox" aria-haspopup="listbox" aria-expanded="false"
+                        aria-controls="crypto-options" autocomplete="off">
+                      <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                        <svg class="arrow-icon w-4 h-4 text-gray-400 transition-transform duration-300 ease-in-out"
+                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                          </path>
+                        </svg>
+                      </div>
+                    </div>
+
+                    <div
+                      class="custom-select-dropdown absolute top-full left-0 bg-[#0f0f0f] border border-[#232323] rounded mt-1 shadow-lg opacity-0 pointer-events-none transition-all duration-300 ease-in-out z-50 w-full"
+                      data-dropdown="crypto-select">
+                      <div id="crypto-options" class="max-h-64 overflow-y-auto">
+                        <div class="loading-spinner mx-auto my-4"></div>
+                      </div>
+                    </div>
+
+                    <!-- Recently Selected Cryptos -->
+                    <div class="recent-cryptos mt-3" id="recent-cryptos" style="display: none;">
+                      <div class="flex flex-wrap gap-2">
+                        <!-- Recent items will be inserted here -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 2: Select Network -->
+              <div
+                class="step-section mb-6 after:border-[#3c3d3d] after:absolute after:left-[10px] relative after:top-[22px] after:h-[calc(100%+10px)] after:border-l after:border-dashed"
+                id="step-2">
+                <label class="flex items-center font-medium mb-2 gap-3 text-[18px] leading-[24px] text-[#ebecf566]">
+                  <span
+                    class="step-indicator flex h-5 w-5 items-end justify-center rounded-full text-center text-[14px] font-medium leading-[18px] border-[1px] border-[#3c3d3d] text-[#3c3d3d] bg-[#111111] z-[5]">2</span>
+                  Select Network
+                </label>
+                <div class="step-content ml-8" id="step-2-content" style="display: none;">
+                  <div class="custom-select-container relative">
+                    <div class="relative">
+                      <input type="text" placeholder="Select network..."
+                        class="network-search-input h-11 cursor-pointer hover:bg-[#1a1a1a] hover:border-[#3c3d3d] w-full bg-[#0f0f0f] border border-[#232323] rounded px-3 py-2 pr-10 text-sm text-white font-medium focus:border-[#facc15] focus:outline-none transition-colors duration-200"
+                        data-select="network-select" readonly role="combobox" aria-haspopup="listbox"
+                        aria-expanded="false" aria-controls="network-options" autocomplete="off">
+                      <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                        <svg class="arrow-icon w-4 h-4 text-gray-400 transition-transform duration-300 ease-in-out"
+                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                          </path>
+                        </svg>
+                      </div>
+                    </div>
+                    <div
+                      class="custom-select-dropdown absolute top-full left-0 bg-[#0f0f0f] border border-[#232323] rounded mt-1 shadow-lg opacity-0 pointer-events-none transition-all duration-300 ease-in-out z-50 w-full"
+                      data-dropdown="network-select">
+                      <div id="network-options">
+                        <div class="px-3 py-2 text-xs text-gray-500">Select a crypto first</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 3: Deposit Address -->
+              <div class="step-section mb-4" id="step-3">
+                <label class="flex items-center font-medium mb-2 gap-3 text-[18px] leading-[24px] text-[#ebecf566]">
+                  <span
+                    class="step-indicator flex h-5 w-5 items-end justify-center rounded-full text-center text-[14px] font-medium leading-[18px] border-[1px] border-[#3c3d3d] text-[#3c3d3d] bg-[#111111] relative z-[5]">3</span>
+                  Deposit Address & QR Code
+                </label>
+                <div class="step-content ml-8" id="step-3-content" style="display: none;">
+                  <!-- Address Section -->
+                  <div
+                      class="address-box border border-[#3c3d3d] rounded-lg p-4 mb-4 flex justify-between items-center gap-6 flex-wrap">
+                    <div class="inline-block p-4 bg-white rounded-lg">
+                      <div id="qr-code" class="w-24 h-24 mx-auto rounded"></div>
+                    </div>
+                    <div class="flex-1">
+                      <label class="text-xs text-[#ebecf599] block mb-1">Your Deposit Address</label>
+                      <div class="flex items-center gap-2 flex-wrap">
+                        <input type="text" id="deposit-address" value="" readonly
+                          class="h-11 text-sm bg-transparent border-none flex-1 text-white focus:outline-none break-all font-medium truncate"
+                          placeholder="Generating address...">
+                        <button id="copy-address-btn" type="button"
+                          class="bg-[#facc15] hover:bg-[#e6b800] text-black px-4 py-2 rounded text-sm font-medium transition-colors duration-200 flex items-center gap-1">
+                          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3">
+                            </path>
+                          </svg>
+                          Copy
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Deposit Details -->
+                  <div class="space-y-2 text-xs">
+                    <div class="flex justify-between">
+                      <span class="text-[#ebecf566]">Deposit To</span>
+                      <span class="text-white font-medium">Funding</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-[#ebecf566]">Minimum Deposit</span>
+                      <span class="text-white font-medium" id="min-deposit-display">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-[#ebecf566]">Network</span>
+                      <span class="text-white font-medium" id="network-display">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-[#ebecf566]">Confirmations</span>
+                      <span class="text-white font-medium" id="confirmations-display">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-[#ebecf566]">Estimated Arrival</span>
+                      <span class="text-white font-medium" id="arrival-time">-</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Section -->
+          <div class="lg:col-span-1">
+            <div class="w-full max-w-[520px] rounded-[12px] border-[1px] border-[#3c3d3d] p-[24px]">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-white">FAQ</h3>
+                <a href="#" class="text-[#facc15] text-xs hover:text-[#e6b800] text-sm flex items-center gap-1 font-medium">
+                  More
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+              </div>
+              <div class="space-y-2">
+                <a href="#" class="faq-item block">
+                  <div
+                    class="flex items-center justify-between p-3 hover:bg-[#1a1a1a] rounded-lg transition-colors duration-200 group">
+                    <div class="flex items-center gap-3">
+                      <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-200"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                        </path>
+                      </svg>
+                      <span class="text-sm text-white group-hover:text-white transition-colors duration-200">How Do I
+                        Deposit My Crypto Into My Account?</span>
+                    </div>
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-200" fill="none"
+                      stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </a>
+                <a href="#" class="faq-item block">
+                  <div
+                    class="flex items-center justify-between p-3 hover:bg-[#1a1a1a] rounded-lg transition-colors duration-200 group">
+                    <div class="flex items-center gap-3">
+                      <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-200"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                        </path>
+                      </svg>
+                      <span class="text-sm text-white group-hover:text-white transition-colors duration-200">Where Can I
+                        Find My Deposit Address?</span>
+                    </div>
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-200" fill="none"
+                      stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </a>
+                <a href="#" class="faq-item block">
+                  <div
+                    class="flex items-center justify-between p-3 hover:bg-[#1a1a1a] rounded-lg transition-colors duration-200 group">
+                    <div class="flex items-center gap-3">
+                      <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-200"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                        </path>
+                      </svg>
+                      <span class="text-sm text-white group-hover:text-white transition-colors duration-200">Why Have I
+                        Not Received My Deposit?</span>
+                    </div>
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-200" fill="none"
+                      stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- All Deposits Section -->
+        <div class="rounded-lg lg:p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-[16px] font-semibold pb-2 inline-block border-b border-[#2d2d2e] after:mt-[8px] after:block after:h-[2px] after:w-[32px] text-dark-label  after:bg-[#facc15] relative after:absolute after:left-1/2 after:-translate-x-1/2">All Deposits</h3>
+            <a href="#" class="text-white hover:text-[#facc15] font-medium text-xs flex items-center gap-1">More <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-[12px]">
+              <thead>
+                <tr>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">Asset</th>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">Amount</th>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">Address</th>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">Time</th>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">TXID</th>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">ID</th>
+                  <th class="text-right py-3 px-2 text-[rgb(189,189,191)]">Status</th>
+                </tr>
+              </thead>
+              <tbody id="deposits-table-body">
+                <tr>
+                  <td colspan="7" class="text-center py-12">
+                    <div class="flex flex-col items-center">
+                      <div class="flex items-center justify-center">
+                        <div class="loading-spinner mb-4"></div>
+                      </div>
+                      <span class="text-gray-500">Loading transactions...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Withdraw Section -->
+    <div id="withdraw-section" class="section-hidden">
+      <div class="lg:p-6 p-4">
+        <!-- Breadcrumb -->
+        <div class="text-xs text-gray-400 mb-2 flex items-center gap-2">
+          <a href="#"
+            class="text-xs font-normal cursor-pointer leading-[18px] text-[rgba(235,236,245,0.4)] hover:text-white transition-colors duration-200">Overview</a>
+          <span class="text-[rgba(235,236,245,0.4)]">/</span>
+          <a href="#"
+            class="text-xs font-normal cursor-pointer leading-[18px] text-white transition-colors duration-200">Withdraw</a>
+        </div>
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+          <h1 class="text-3xl font-bold text-white">Withdraw</h1>
+          <a href="#" class="text-[#facc15] hover:text-[#e6b800] font-medium flex items-center gap-2">
+            Buy Crypto
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Main Form Section -->
+          <div class="lg:col-span-2">
+            <!-- Withdraw Form -->
+            <div class="rounded-lg lg:p-6 lg:mb-6 mb-14">
+
+              <!-- Step 1: Select Crypto -->
+              <div
+                class="step-section mb-4 after:border-[#3c3d3d] after:absolute after:left-[10px] relative after:top-[22px] after:h-[calc(100%+10px)] after:border-l after:border-dashed"
+                id="withdraw-step-1">
+                <label class="flex items-center font-medium mb-2 gap-3 text-[18px] leading-[24px] text-white">
+                  <span
+                    class="step-indicator flex h-5 w-5 items-end justify-center rounded-full text-center text-[14px] font-medium leading-[18px] border-[1px] border-[#3c3d3d] text-[#3c3d3d] bg-[#111111] z-[5]">1</span>
+                  Select Crypto
+                </label>
+                <div class="step-content ml-8" id="withdraw-step-1-content">
+                  <div class="custom-select-container relative">
+                    <div class="relative">
+                      <div class="absolute left-3 top-1/2 transform -translate-y-1/2 z-10">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                      </div>
+                      <input type="text" placeholder="Select crypto you want to withdraw"
+                        class="crypto-search-input h-11 cursor-pointer hover:bg-[#1a1a1a] hover:border-[#3c3d3d] w-full bg-[#0f0f0f] border border-[#232323] rounded px-10 py-2 pr-10 text-sm text-white font-medium focus:border-[#facc15] focus:outline-none transition-colors duration-200"
+                        data-select="withdraw-crypto-select" role="combobox" aria-haspopup="listbox"
+                        aria-expanded="false" aria-controls="withdraw-crypto-options" autocomplete="off">
+                      <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                        <svg class="arrow-icon w-4 h-4 text-gray-400 transition-transform duration-300 ease-in-out"
+                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                          </path>
+                        </svg>
+                      </div>
+                    </div>
+
+                    <div
+                      class="custom-select-dropdown absolute top-full left-0 bg-[#0f0f0f] border border-[#232323] rounded mt-1 shadow-lg opacity-0 pointer-events-none transition-all duration-300 ease-in-out z-50 w-full"
+                      data-dropdown="withdraw-crypto-select">
+                      <div id="withdraw-crypto-options" class="max-h-64 overflow-y-auto">
+                        <div class="loading-spinner mx-auto my-4"></div>
+                      </div>
+                    </div>
+
+                    <!-- Recently Selected Cryptos -->
+                    <div class="recent-cryptos mt-3" id="withdraw-recent-cryptos" style="display: none;">
+                      <div class="flex flex-wrap gap-2">
+                        <!-- Recent items will be inserted here -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 2: Select Network -->
+              <div
+                class="step-section mb-6 after:border-[#3c3d3d] after:absolute after:left-[10px] relative after:top-[22px] after:h-[calc(100%+10px)] after:border-l after:border-dashed"
+                id="withdraw-step-2">
+                <label class="flex items-center font-medium mb-2 gap-3 text-[18px] leading-[24px] text-[#ebecf566]">
+                  <span
+                    class="step-indicator flex h-5 w-5 items-end justify-center rounded-full text-center text-[14px] font-medium leading-[18px] border-[1px] border-[#3c3d3d] text-[#3c3d3d] bg-[#111111] z-[5]">2</span>
+                  Select Network
+                </label>
+                <div class="step-content ml-8" id="withdraw-step-2-content" style="display: none;">
+                  <div class="custom-select-container relative">
+                    <div class="relative">
+                      <input type="text" placeholder="Select network..."
+                        class="network-search-input h-11 cursor-pointer hover:bg-[#1a1a1a] hover:border-[#3c3d3d] w-full bg-[#0f0f0f] border border-[#232323] rounded px-3 py-2 pr-10 text-sm text-white font-medium focus:border-[#facc15] focus:outline-none transition-colors duration-200"
+                        data-select="withdraw-network-select" readonly role="combobox" aria-haspopup="listbox"
+                        aria-expanded="false" aria-controls="withdraw-network-options" autocomplete="off">
+                      <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                        <svg class="arrow-icon w-4 h-4 text-gray-400 transition-transform duration-300 ease-in-out"
+                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                          </path>
+                        </svg>
+                      </div>
+                    </div>
+                    <div
+                      class="custom-select-dropdown absolute top-full left-0 bg-[#0f0f0f] border border-[#232323] rounded mt-1 shadow-lg opacity-0 pointer-events-none transition-all duration-300 ease-in-out z-50 w-full"
+                      data-dropdown="withdraw-network-select">
+                      <div id="withdraw-network-options">
+                        <div class="px-3 py-2 text-xs text-gray-500">Select a crypto first</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 3: Withdrawal Details -->
+              <div class="step-section mb-4" id="withdraw-step-3">
+                <label class="flex items-center font-medium mb-2 gap-3 text-[18px] leading-[24px] text-[#ebecf566]">
+                  <span
+                    class="step-indicator flex h-5 w-5 items-end justify-center rounded-full text-center text-[14px] font-medium leading-[18px] border-[1px] border-[#3c3d3d] text-[#3c3d3d] bg-[#111111] z-[5]">3</span>
+                  Withdrawal Details
+                </label>
+                <div class="step-content ml-8" id="withdraw-step-3-content" style="display: none;">
+                  <!-- Withdrawal Address -->
+                  <div class="mb-4">
+                    <label class="text-xs text-gray-400 block mb-2">Withdrawal Address</label>
+                    <input type="text" id="withdraw-address" placeholder="Enter destination address"
+                      class="w-full h-11 bg-[#0f0f0f] border border-[#232323] rounded px-3 py-2 text-sm text-white font-medium focus:border-[#facc15] focus:outline-none transition-colors duration-200">
+                  </div>
+
+                  <!-- Amount Section -->
+                  <div class="mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                      <label class="text-xs text-gray-400">Amount</label>
+                      <span class="text-xs text-gray-500">Available: <span id="available-balance">0</span> <span
+                          id="available-symbol">-</span></span>
+                    </div>
+                    <div class="relative">
+                      <input type="number" id="withdraw-amount" placeholder="0.00"
+                        class="w-full h-11 bg-[#0f0f0f] border border-[#232323] rounded px-3 py-2 pr-16 text-sm text-white font-medium focus:border-[#facc15] focus:outline-none transition-colors duration-200"
+                        step="any" min="0">
+                      <button id="max-amount-btn" type="button"
+                        class="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-[#facc15] hover:text-[#e6b800] font-medium">
+                        MAX
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Network Details -->
+                  <div class="space-y-2 text-xs mb-4">
+                    <div class="flex justify-between">
+                      <span class="text-[#ebecf566]">Network Fee</span>
+                      <span class="text-white font-medium" id="network-fee">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-[#ebecf566]">Minimum Withdraw</span>
+                      <span class="text-white font-medium" id="min-withdraw">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-[#ebecf566]">Daily Limit</span>
+                      <span class="text-white font-medium" id="daily-limit">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-[#ebecf566]">You Will Receive</span>
+                      <span class="text-white font-medium" id="receive-amount">0</span>
+                    </div>
+                  </div>
+
+                  <!-- Withdrawal Button -->
+                  <button id="withdraw-btn" type="button"
+                    class="w-full bg-[#facc15] hover:bg-[#e6b800] text-black font-medium py-2 px-4 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Withdraw
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Section -->
+          <div class="lg:col-span-1">
+            <div class="w-full max-w-[520px] rounded-[12px] border-[1px] border-[#3c3d3d] p-[24px]">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-white">FAQ</h3>
+                <a href="#" class="text-[#facc15] hover:text-[#e6b800] text-sm flex items-center gap-1 font-medium">
+                  More
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+              </div>
+              <div class="space-y-2">
+                <a href="#" class="faq-item block">
+                  <div
+                    class="flex items-center justify-between p-3 hover:bg-[#1a1a1a] rounded-lg transition-colors duration-200 group">
+                    <div class="flex items-center gap-3">
+                      <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-200"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                        </path>
+                      </svg>
+                      <span class="text-sm text-white group-hover:text-white transition-colors duration-200">How Do I
+                        Withdraw My Crypto?</span>
+                    </div>
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-200"
+                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </a>
+                <a href="#" class="faq-item block">
+                  <div
+                    class="flex items-center justify-between p-3 hover:bg-[#1a1a1a] rounded-lg transition-colors duration-200 group">
+                    <div class="flex items-center gap-3">
+                      <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-200"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                        </path>
+                      </svg>
+                      <span class="text-sm text-white group-hover:text-white transition-colors duration-200">How Do I
+                        Check My Withdrawal History?</span>
+                    </div>
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-200"
+                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </a>
+                <a href="#" class="faq-item block">
+                  <div
+                    class="flex items-center justify-between p-3 hover:bg-[#1a1a1a] rounded-lg transition-colors duration-200 group">
+                    <div class="flex items-center gap-3">
+                      <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-200"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                        </path>
+                      </svg>
+                      <span class="text-sm text-white group-hover:text-white transition-colors duration-200">Why
+                        Hasn't My Withdrawal Arrived In The Account?</span>
+                    </div>
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-200"
+                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- All Withdrawals Section -->
+        <div class="rounded-lg lg:p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-[16px] font-semibold pb-2 inline-block border-b border-[#2d2d2e] after:mt-[8px] after:block after:h-[2px] after:w-[32px] text-dark-label  after:bg-[#facc15] relative after:absolute after:left-1/2 after:-translate-x-1/2">All Withdrawals</h3>
+            <a href="#" class="text-white hover:text-[#facc15] font-medium text-xs flex items-center gap-1">More <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-[12px]">
+              <thead>
+                <tr>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">Asset</th>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">Amount</th>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">Network</th>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">Time</th>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">TXID</th>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">Address</th>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">ID</th>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">Status</th>
+                  <th class="text-left py-3 px-2 text-[rgb(189,189,191)]">Operation</th>
+                </tr>
+              </thead>
+              <tbody id="withdrawals-table-body">
+                <tr>
+                  <td colspan="9" class="text-center py-12">
+                    <div class="flex flex-col items-center">
+                      <div class="flex items-center justify-center">
+                        <div class="loading-spinner mb-4"></div>
+                      </div>
+                      <span class="text-gray-500">Loading transactions...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+
+</html>

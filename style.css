@@ -1,0 +1,346 @@
+/* Minimal Custom Styles */
+
+/* Sidebar Transitions */
+#sidebar span {
+    transition: opacity 0.3s ease;
+}
+
+#sidebar .p-6 {
+    transition: opacity 0.3s ease;
+}
+
+#sidebar-toggle svg {
+    transition: transform 0.3s ease;
+}
+
+/* Mobile Styles */
+@media (max-width: 1023px) {
+    #main-content {
+        margin-left: 0 !important;
+    }
+    
+    #sidebar {
+        transform: translateX(-100%);
+    }
+    
+    #sidebar.translate-x-0 {
+        transform: translateX(0);
+    }
+}
+
+/* Section Visibility */
+.section-hidden {
+    display: none;
+}
+
+/* Custom Select Styles */
+.custom-select-container {
+    position: relative;
+    user-select: none;
+}
+
+.custom-select-trigger {
+    position: relative;
+    cursor: pointer;
+    outline: none;
+}
+
+.custom-select-trigger:focus {
+    border-color: #facc15;
+    box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.2);
+}
+
+.custom-select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #0f0f0f;
+    border: 1px solid #232323;
+    border-radius: 8px;
+    margin-top: 4px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 50;
+    max-height: 360px;
+    overflow-y: auto;
+    transform: translateY(-5px);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.custom-select-dropdown.show {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+}
+
+.custom-select-dropdown:not(.opacity-0) {
+    transform: translateY(0);
+}
+
+.custom-select-option {
+    position: relative;
+    transition: all 0.15s ease;
+}
+
+.custom-select-option:hover {
+    background-color: #232323;
+    color: white;
+}
+
+.select-option {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.select-option:hover {
+    background: #1a1a1a;
+}
+
+.select-option.selected {
+    background: #facc15;
+    color: #000;
+}
+
+/* Animation for dropdown arrow */
+.custom-select-trigger svg {
+    transition: transform 0.2s ease;
+}
+
+/* Focus ring for better accessibility */
+.custom-select-trigger:focus-visible {
+    outline: 2px solid #facc15;
+    outline-offset: 2px;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #facc15;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Notification Styles */
+.notification {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: 500;
+  z-index: 9999;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Recent Cryptos Animation */
+.recent-cryptos {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.recent-crypto-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Step Sections */
+.step-section {
+    display: block;
+}
+
+.step-content {
+    display: none;
+}
+
+.step-content.visible {
+    display: block;
+}
+
+#step-1-content, #withdraw-step-1-content {
+    display: block;
+}
+
+/* Address Box */
+.address-box {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+}
+
+.copy-success {
+    animation: copySuccess 0.3s ease-in-out;
+}
+
+@keyframes copySuccess {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0f0f0f;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #232323;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3c3d3d;
+}
+
+.custom-select-dropdown::-webkit-scrollbar {
+    width: 4px;
+}
+
+.custom-select-dropdown::-webkit-scrollbar-track {
+    background: #232323;
+}
+
+.custom-select-dropdown::-webkit-scrollbar-thumb {
+    background: #404040;
+    border-radius: 2px;
+}
+
+/* noUiSlider Styles */
+.noUi-target {
+    background: #232323 !important;
+    border: 1px solid #232323 !important;
+    box-shadow: none !important;
+    height: 3px !important;
+    border-radius: 0px !important;
+}
+
+.noUi-connects {
+    border-radius: 4px;
+}
+
+.noUi-connect {
+    background: #facc15 !important;
+    transition: background 0.2s ease;
+}
+
+.noUi-horizontal .noUi-handle {
+    border: 2px solid #FCFDFF !important;
+    width: .75rem !important;
+    height: .75rem !important;
+    top: -5px !important;
+    right: -10px !important;
+    border-radius: 0% !important;
+    background: #0f0f0f !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+}
+
+.noUi-horizontal .noUi-handle:before,
+.noUi-horizontal .noUi-handle:after {
+    display: none !important;
+}
+
+.noUi-pips-horizontal {
+    padding: 0 !important;
+    height: 20px !important;
+}
+
+.noUi-marker-horizontal.noUi-marker-large {
+    height: 8px !important;
+    width: 8px !important;
+    background-color: #0f0f0f !important;
+    border: 1px solid #3c3d3d;
+    top: -4px;
+}
+
+.noUi-pips {
+    color: #EBECF5;
+    font-size: 10px;
+}
+
+.noUi-value {
+    color: #EBECF5;
+    font-size: 10px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.noUi-value:hover {
+    color: #facc15;
+}
+
+.noUi-marker.active {
+    background: #facc15 !important;
+}
+
+.sell-mode .noUi-marker.active {
+    background: #ef4444 !important;
+}
+
+.noUi-marker {
+    background: #3c3d3d !important;
+    border-radius: 0px !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+}
+
+.noUi-marker:hover {
+    background: #facc15 !important;
+    border-color: #facc15 !important;
+}
+
+.sell-mode .noUi-marker:hover {
+    background: #ef4444 !important;
+}
+
+.noUi-marker-horizontal.noUi-marker-large {
+    height: 6px;
+    width: 6px;
+}
+
+.noUi-marker-horizontal.noUi-marker-normal {
+    height: 4px;
+    width: 4px;
+}
+
+.noUi-marker-horizontal.noUi-marker-small {
+    height: 2px;
+    width: 2px;
+}
