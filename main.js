@@ -1,357 +1,3 @@
-// Подробная функция для вывода всех данных API в консоль
-async function showAllApiData() {
-  console.log('🚀 === ПОДРОБНЫЙ ВЫВОД ВСЕХ ДАННЫХ API ===');
-  
-  try {
-    const walletApi = new WalletApiService();
-    
-    // 1. Балансы
-    console.log('\n💰 === БАЛАНСЫ ===');
-    console.log('📡 Запрос: GET /api/wallet/getBalances');
-    try {
-      const balances = await walletApi.getBalances();
-      console.log('📊 Ответ API (балансы):', balances);
-      if (balances.status === 'success') {
-        console.log('✅ Статус: success');
-        console.log('💰 Балансы:', balances.balances);
-        Object.entries(balances.balances || {}).forEach(([currency, balance]) => {
-          console.log(`   ${currency}: ${balance}`);
-        });
-      } else {
-        console.log('❌ Статус:', balances.status);
-        console.log('📝 Сообщение:', balances.msg);
-      }
-    } catch (error) {
-      console.error('❌ Ошибка получения балансов:', error.message);
-      console.error('🔍 Полная ошибка:', error);
-    }
-    
-    // 2. Сети для разных валют
-    console.log('\n🔗 === СЕТИ ДЛЯ ВАЛЮТ ===');
-    const currencies = ['USDT', 'BTC', 'ETH'];
-    for (const currency of currencies) {
-      console.log(`\n📡 Запрос: POST /api/wallet/getCurrencyNetworks (${currency})`);
-      try {
-        console.log(`🔄 Запрашиваю сети для ${currency}...`);
-        const networks = await walletApi.getCurrencyNetworks(currency);
-        console.log(`📊 Ответ API (сети для ${currency}):`, networks);
-        if (networks.status === 'success') {
-          console.log('✅ Статус: success');
-          console.log(`🔗 Сети:`, networks.networks);
-          console.log(`📊 Тип networks:`, typeof networks.networks);
-          console.log(`📊 Является ли массивом:`, Array.isArray(networks.networks));
-        } else {
-          console.log('❌ Статус:', networks.status);
-          console.log('📝 Сообщение:', networks.msg);
-        }
-      } catch (error) {
-        console.error(`❌ Ошибка получения сетей для ${currency}:`, error.message);
-        console.error(`🔍 Полная ошибка для ${currency}:`, error);
-      }
-    }
-    
-    // 3. Информация о кошельках
-    console.log('\n🏦 === ИНФОРМАЦИЯ О КОШЕЛЬКАХ ===');
-    for (const currency of currencies) {
-      console.log(`\n📡 Запрос: POST /api/wallet/get (${currency})`);
-      try {
-        console.log(`🔄 Запрашиваю информацию о кошельке для ${currency}...`);
-        const walletInfo = await walletApi.getWalletInfo(currency);
-        console.log(`📊 Ответ API (кошелек ${currency}):`, walletInfo);
-        if (walletInfo.status === 'success') {
-          console.log('✅ Статус: success');
-          console.log(`🏦 Адрес: ${walletInfo.address || 'Не указан'}`);
-          console.log(`💰 Баланс: ${walletInfo.balance || 'Не указан'}`);
-        } else {
-          console.log('❌ Статус:', walletInfo.status);
-          console.log('📝 Сообщение:', walletInfo.msg);
-        }
-      } catch (error) {
-        console.error(`❌ Ошибка получения информации о кошельке ${currency}:`, error.message);
-        console.error(`🔍 Полная ошибка для ${currency}:`, error);
-      }
-    }
-    
-    // 4. Транзакции
-    console.log('\n📊 === ТРАНЗАКЦИИ ===');
-    console.log('📡 Запрос: GET /api/wallet/transactions');
-    try {
-      console.log('🔄 Запрашиваю транзакции...');
-      const transactions = await walletApi.getTransactions();
-      console.log('📊 Ответ API (транзакции):', transactions);
-      if (transactions.status === 'success') {
-        console.log('✅ Статус: success');
-        console.log(`📊 Количество транзакций: ${transactions.transactions ? transactions.transactions.length : 0}`);
-        if (transactions.transactions && transactions.transactions.length > 0) {
-          console.log('📋 Детали транзакций:');
-          transactions.transactions.forEach((tx, index) => {
-            console.log(`   ${index + 1}. ID: ${tx.id}, Направление: ${tx.direction}, Валюта: ${tx.currency}, Сумма: ${tx.amount}, Статус: ${tx.status}`);
-          });
-        }
-      } else {
-        console.log('❌ Статус:', transactions.status);
-        console.log('📝 Сообщение:', transactions.msg);
-      }
-    } catch (error) {
-      console.error('❌ Ошибка получения транзакций:', error.message);
-      console.error('🔍 Полная ошибка:', error);
-    }
-    
-    console.log('\n✅ === ВСЕ ДАННЫЕ API ВЫВЕДЕНЫ В КОНСОЛЬ ===');
-    
-    } catch (error) {
-    console.error('❌ Общая ошибка:', error);
-  }
-}
-
-// Функция для показа уведомления об авторизации
-function showAuthNotification() {
-  // Проверяем, не показывается ли уже уведомление
-  if (document.getElementById('auth-notification')) {
-    console.log('ℹ️ Уведомление об авторизации уже показывается');
-    return;
-  }
-  
-  console.log('🔔 Показываю уведомление об авторизации');
-  const notification = document.createElement('div');
-  notification.id = 'auth-notification';
-  notification.className = 'fixed top-4 right-4 bg-yellow-600 text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-md';
-  notification.innerHTML = `
-    <div class="flex items-center gap-3">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-      </svg>
-      <div>
-        <div class="font-medium">Требуется авторизация</div>
-        <div class="text-sm opacity-90">Для доступа к кошельку необходимо войти в систему</div>
-      </div>
-    </div>
-    <button onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-white opacity-70 hover:opacity-100">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-      </svg>
-    </button>
-  `;
-  document.body.appendChild(notification);
-  
-  // Автоматически убираем через 10 секунд
-  setTimeout(() => {
-    if (notification.parentElement) {
-      notification.remove();
-    }
-  }, 10000);
-}
-
-// Функция для тестирования QR кода
-function testQRCode() {
-  console.log('🧪 === ТЕСТИРОВАНИЕ QR КОДА ===');
-  
-  const qrContainer = document.getElementById('qr-code');
-  if (!qrContainer) {
-    console.error('❌ Контейнер QR кода не найден');
-    return;
-  }
-  
-  console.log('✅ Контейнер QR кода найден');
-  
-  // Тестируем с тестовым адресом
-  const testAddress = '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa';
-  console.log(`🔄 Тестирую QR код с адресом: ${testAddress}`);
-  
-  // Создаем простой QR код
-  const size = 8;
-  let html = '<div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 1px; width: 100%; height: 100%;">';
-  
-  for (let i = 0; i < size; i++) {
-    for (let j = 0; j < size; j++) {
-      const shouldFill = (i + j + testAddress.length) % 3 === 0 || 
-                        (i === 0 && j === 0) || 
-                        (i === size-1 && j === 0) || 
-                        (i === 0 && j === size-1);
-      
-      html += `<div style="background-color: ${shouldFill ? '#000' : '#fff'}; width: 100%; height: 100%;"></div>`;
-    }
-  }
-  
-  html += '</div>';
-  
-  qrContainer.innerHTML = `
-    <div class="qr-code-container">
-      <div class="qr-code-display w-32 h-32 mx-auto bg-white p-2 rounded">
-        ${html}
-      </div>
-      <div class="text-xs text-gray-400 mt-2 text-center break-all max-w-32">${testAddress}</div>
-    </div>
-  `;
-  
-  console.log('✅ QR код протестирован и отображен');
-}
-
-// Функция для проверки элементов HTML
-function checkHTMLElements() {
-  console.log('🔍 === ПРОВЕРКА ЭЛЕМЕНТОВ HTML ===');
-  
-  const elements = [
-    'deposits-table-body',
-    'withdrawals-table-body',
-    'deposit-address',
-    'qr-code',
-    'crypto-options',
-    'withdraw-crypto-options',
-    'available-balance',
-    'available-symbol'
-  ];
-  
-  elements.forEach(id => {
-    const element = document.getElementById(id);
-    if (element) {
-      console.log(`✅ ${id}: найден`, element);
-      if (element.innerHTML) {
-        console.log(`   Содержимое: ${element.innerHTML.substring(0, 100)}...`);
-      }
-    } else {
-      console.log(`❌ ${id}: НЕ НАЙДЕН`);
-    }
-  });
-}
-
-// Функция для принудительного обновления всех данных
-async function forceRefreshAllData() {
-  console.log('🔄 === ПРИНУДИТЕЛЬНОЕ ОБНОВЛЕНИЕ ВСЕХ ДАННЫХ ===');
-  
-  try {
-    // Обновляем балансы
-    if (window.formManager) {
-      await window.formManager.loadBalancesFromApi();
-      console.log('✅ Балансы обновлены');
-    }
-    
-    // Обновляем транзакции
-    await forceRefreshTransactions();
-    
-    // Обновляем списки криптовалют
-    if (window.formManager) {
-      window.formManager.filteredCryptos = Object.keys(window.formManager.cryptoData);
-      window.formManager.withdrawFilteredCryptos = Object.keys(window.formManager.cryptoData);
-      window.formManager.renderCryptoOptions('crypto-options', 'deposit');
-      window.formManager.renderCryptoOptions('withdraw-crypto-options', 'withdraw');
-      console.log('✅ Списки криптовалют обновлены');
-    }
-    
-    console.log('✅ Все данные обновлены');
-  } catch (error) {
-    console.error('❌ Ошибка обновления данных:', error);
-  }
-}
-
-// Функция для принудительного обновления таблиц транзакций
-async function forceRefreshTransactions() {
-  console.log('🔄 === ПРИНУДИТЕЛЬНОЕ ОБНОВЛЕНИЕ ТАБЛИЦ ТРАНЗАКЦИЙ ===');
-  
-  try {
-    // Очищаем таблицы
-    const depositsTableBody = document.getElementById('deposits-table-body');
-    const withdrawalsTableBody = document.getElementById('withdrawals-table-body');
-    
-    if (depositsTableBody) {
-      depositsTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4">Обновление...</td></tr>';
-    }
-    if (withdrawalsTableBody) {
-      withdrawalsTableBody.innerHTML = '<tr><td colspan="9" class="text-center py-4">Обновление...</td></tr>';
-    }
-    
-    // Загружаем транзакции заново
-    await loadTransactionsFromApi();
-    
-    console.log('✅ Таблицы транзакций обновлены');
-  } catch (error) {
-    console.error('❌ Ошибка обновления таблиц:', error);
-  }
-}
-
-// Функция для тестирования получения сетей
-async function testNetworks() {
-  console.log('🧪 === ТЕСТИРОВАНИЕ ПОЛУЧЕНИЯ СЕТЕЙ ===');
-  
-  try {
-    const walletApi = new WalletApiService();
-    
-    // Тестируем получение сетей для USDT
-    console.log('🔄 Тестирую получение сетей для USDT...');
-    const networksData = await walletApi.getCurrencyNetworks('USDT');
-    console.log('📊 Результат получения сетей USDT:', networksData);
-    
-    if (networksData.status === 'success') {
-      console.log(`✅ Сети получены:`, networksData.networks);
-      console.log(`📊 Тип networks:`, typeof networksData.networks);
-      console.log(`📊 Является ли массивом:`, Array.isArray(networksData.networks));
-    } else {
-      console.log(`❌ Ошибка: ${networksData.msg}`);
-    }
-    
-  } catch (error) {
-    console.error('❌ Ошибка тестирования сетей:', error);
-  }
-}
-
-// Функция для тестирования получения адреса кошелька
-async function testWalletAddress() {
-  console.log('🧪 === ТЕСТИРОВАНИЕ ПОЛУЧЕНИЯ АДРЕСА КОШЕЛЬКА ===');
-  
-  try {
-    const walletApi = new WalletApiService();
-    
-    // Тестируем получение адреса для USDT
-    console.log('🔄 Тестирую получение адреса для USDT...');
-    const walletData = await walletApi.getWalletInfo('USDT');
-    console.log('📊 Результат получения адреса USDT:', walletData);
-    
-    if (walletData.status === 'success') {
-      console.log(`✅ Адрес получен: ${walletData.address}`);
-      console.log(`💰 Баланс: ${walletData.balance}`);
-    } else {
-      console.log(`❌ Ошибка: ${walletData.msg}`);
-    }
-    
-  } catch (error) {
-    console.error('❌ Ошибка тестирования адреса:', error);
-  }
-}
-
-// Функция для тестирования API без авторизации
-async function testApiWithoutAuth() {
-  console.log('🧪 === ТЕСТИРОВАНИЕ API БЕЗ АВТОРИЗАЦИИ ===');
-  
-  try {
-    const testUrl = 'https://apiexchange.ymca.one/api/wallet/transactions';
-    console.log(`🔄 Тестирую GET запрос к: ${testUrl}`);
-    
-    const response = await fetch(testUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    console.log(`📊 Статус ответа: ${response.status}`);
-    console.log(`📋 Заголовки:`, Object.fromEntries(response.headers.entries()));
-    
-    const text = await response.text();
-    console.log(`📝 Тело ответа:`, text);
-    
-    try {
-      const json = JSON.parse(text);
-      console.log(`🔍 JSON ответ:`, json);
-    } catch (e) {
-      console.log(`❌ Ответ не является JSON`);
-    }
-    
-  } catch (error) {
-    console.error('❌ Ошибка тестирования API:', error);
-  }
-}
-
-// Базовые данные для fallback (используются только при ошибках API)
 const cryptoData = {
   'USDT': {
     name: 'Tether',
@@ -377,10 +23,8 @@ const cryptoData = {
 };
 
 
-// Убрал тестовые данные - теперь используются только реальные данные из API
 
 
-// Функция для отображения пустого состояния таблицы
 function showEmptyTableState() {
   const depositsTableBody = document.getElementById('deposits-table-body');
   const withdrawalsTableBody = document.getElementById('withdrawals-table-body');
@@ -491,35 +135,25 @@ class WalletApiService {
 
   async makeRequest(endpoint, options = {}) {
     const url = `${this.baseUrl}${endpoint}`;
+    const { method = 'POST', headers = {}, body, ...rest } = options;
     const finalOptions = {
-      method: options.method || 'POST',
+      method,
       headers: {
         'Content-Type': 'application/json',
-        ...options.headers
+        ...headers
       },
       credentials: 'include',
-      ...options
+      ...rest
     };
 
-    // Для GET запросов не добавляем body
-    if (options.method !== 'GET' && options.body) {
-      finalOptions.body = JSON.stringify(options.body);
+    if (body && method !== 'GET') {
+      finalOptions.body = JSON.stringify(body);
     }
 
-    // 📝 подробный лог запроса
-    console.log(`\n📡 === API ЗАПРОС ===`);
-    console.log(`🌐 URL: ${url}`);
-    console.log(`📋 Метод: ${finalOptions.method}`);
-    console.log(`📦 Тело запроса:`, finalOptions.body);
-    console.log(`🔧 Опции:`, finalOptions);
 
     try {
       const response = await fetch(url, finalOptions);
       const text = await response.text();
-      console.log(`\n📡 === API ОТВЕТ ===`);
-      console.log(`🌐 URL: ${url}`);
-      console.log(`📊 Статус HTTP: ${response.status}`);
-      console.log(`📝 Сырой ответ:`, text);
 
       let data;
       try {
@@ -528,22 +162,17 @@ class WalletApiService {
         throw new Error(`Ответ не JSON: ${text}`);
       }
 
-      console.log(`📊 Обработанный ответ:`, data);
       
       if (!response.ok) {
-        console.error(`❌ HTTP ошибка ${response.status}:`, data);
         throw new Error(`HTTP ${response.status}: ${data.msg || 'Unknown error'}`);
       }
       if (data.status === 'err') {
-        console.error(`❌ API ошибка:`, data);
         throw new Error(data.msg || 'API error');
       }
       
-      console.log(`✅ API запрос успешен`);
 
       return data;
     } catch (error) {
-      console.error(`❌ API Error (${url}):`, error);
       throw error;
     }
   }
@@ -556,7 +185,6 @@ class WalletApiService {
   }
 
   async getCurrencyNetworks(currency) {
-    // 🚀 передаём валюту ровно как в balances
     return this.makeRequest('/api/wallet/getCurrencyNetworks', {
       method: 'POST',
       body: { currency }
@@ -578,16 +206,14 @@ class WalletApiService {
   }
 
   async getTransactions() {
-    // 🚀 убрал body для GET
     return this.makeRequest('/api/wallet/transactions', {
       method: 'GET',
-      body: undefined // Явно убираем body для GET запроса
+      body: undefined 
     });
   }
 }
 
 
-// Функция будет вызвана автоматически при загрузке страницы
 
 class FormManager {
   constructor() {
@@ -617,43 +243,31 @@ class FormManager {
   }
 
   async init() {
-    console.log('🚀 Начинаю инициализацию FormManager...');
     
-    // Инициализируем cryptoData статическими данными сначала
     this.cryptoData = { ...cryptoData };
-    console.log('📊 Инициализирован cryptoData:', Object.keys(this.cryptoData));
     
-    // Загружаем балансы из API
     await this.loadBalancesFromApi();
     
     this.filteredCryptos = Object.keys(this.cryptoData);
     this.withdrawFilteredCryptos = Object.keys(this.cryptoData);
-    console.log(`📋 Обновлены списки криптовалют: ${this.filteredCryptos.length} для депозита, ${this.withdrawFilteredCryptos.length} для вывода`);
     
     this.initDepositForm();
     this.initWithdrawForm();
     document.addEventListener('click', this.closeAllSelects.bind(this));
     
-    console.log('✅ Инициализация FormManager завершена');
   }
 
   async loadBalancesFromApi() {
     try {
-      console.log('🔄 Загружаю балансы из API...');
       const balancesData = await this.walletApi.getBalances();
-      console.log('📊 Полученные балансы:', balancesData);
       
       if (balancesData.status === 'success' && balancesData.balances) {
-        console.log('✅ Успешно получены балансы');
-        // Обновляем балансы в cryptoData
         Object.keys(balancesData.balances).forEach(currency => {
           if (this.cryptoData[currency]) {
             this.cryptoData[currency].balance = balancesData.balances[currency];
-            console.log(`💰 Обновлен баланс ${currency}: ${balancesData.balances[currency]}`);
           }
         });
         
-        // Если API вернул новые валюты, добавляем их
         Object.keys(balancesData.balances).forEach(currency => {
           if (!this.cryptoData[currency]) {
             this.cryptoData[currency] = {
@@ -663,16 +277,12 @@ class FormManager {
               balance: balancesData.balances[currency],
               networks: []
             };
-            console.log(`🆕 Добавлена новая валюта: ${currency}`);
           }
         });
         
       } else {
-        console.log(`❌ Ошибка API: ${balancesData.msg || 'Неизвестная ошибка'}`);
       }
     } catch (error) {
-      console.error('❌ Ошибка загрузки балансов:', error);
-      // Не показываем ошибку пользователю при загрузке, только в консоль
     }
   }
 
@@ -796,7 +406,6 @@ class FormManager {
     const addressInput = document.getElementById('withdraw-address');
     
     if (!this.withdrawState.selectedCrypto || !this.withdrawState.selectedNetwork) {
-      console.log('⚠️ Не выбрана валюта или сеть');
       return;
     }
     
@@ -804,23 +413,19 @@ class FormManager {
     const address = addressInput.value.trim();
     
     if (!amount || amount <= 0) {
-      console.log('⚠️ Сумма не указана или некорректна:', amount);
       return;
     }
     
     if (!address) {
-      console.log('⚠️ Адрес не указан');
       return;
     }
     
     try {
-      // Показываем индикатор загрузки
       const withdrawBtn = document.getElementById('withdraw-btn');
       const originalText = withdrawBtn.innerHTML;
       withdrawBtn.innerHTML = '<div class="loading-spinner"></div> Processing...';
       withdrawBtn.disabled = true;
       
-      // Выполняем вывод через API
       const result = await this.walletApi.withdraw(
         this.withdrawState.selectedCrypto,
         amount,
@@ -830,24 +435,18 @@ class FormManager {
       if (result.status === 'success') {
         this.showSuccess('Заявка на вывод отправлена успешно');
         
-        // Очищаем форму
         amountInput.value = '';
         addressInput.value = '';
         this.withdrawState.selectedCrypto = null;
         this.withdrawState.selectedNetwork = null;
         
-        // Обновляем историю транзакций
         await this.refreshTransactions();
         
-        // Сбрасываем состояние формы
         this.resetWithdrawForm();
       } else {
-        console.log('❌ Ошибка API при выводе:', result.msg);
       }
     } catch (error) {
-      console.error('❌ Ошибка вывода:', error);
     } finally {
-      // Восстанавливаем кнопку
       const withdrawBtn = document.getElementById('withdraw-btn');
       withdrawBtn.innerHTML = originalText;
       withdrawBtn.disabled = false;
@@ -873,15 +472,11 @@ class FormManager {
   }
 
   showError(message) {
-    // Проверяем, не показывается ли уже ошибка
     const existingError = document.querySelector('.fixed.top-4.right-4.bg-red-600');
     if (existingError) {
-      console.log('ℹ️ Ошибка уже показывается, пропускаю:', message);
       return;
     }
     
-    console.log('❌ Показываю ошибку:', message);
-    // Создаем уведомление об ошибке
     const notification = document.createElement('div');
     notification.className = 'fixed top-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50';
     notification.textContent = message;
@@ -895,15 +490,11 @@ class FormManager {
   }
 
   showSuccess(message) {
-    // Проверяем, не показывается ли уже уведомление об успехе
     const existingSuccess = document.querySelector('.fixed.top-4.right-4.bg-green-600');
     if (existingSuccess) {
-      console.log('ℹ️ Уведомление об успехе уже показывается, пропускаю:', message);
       return;
     }
     
-    console.log('✅ Показываю успех:', message);
-    // Создаем уведомление об успехе
     const notification = document.createElement('div');
     notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50';
     notification.textContent = message;
@@ -1052,7 +643,6 @@ class FormManager {
               return;
             }
           } catch (_e) {}
-          console.log('Failed to copy address');
         }
       });
     }
@@ -1066,16 +656,12 @@ class FormManager {
   }
 
   renderCryptoOptions(containerId, formType) {
-    console.log(`🔄 Рендерю опции криптовалют для ${containerId} (${formType})`);
     const container = document.getElementById(containerId);
     if (!container) {
-      console.error(`❌ Контейнер ${containerId} не найден`);
       return;
     }
     container.innerHTML = '';
     const cryptos = formType === 'deposit' ? this.filteredCryptos : this.withdrawFilteredCryptos;
-    console.log(`📊 Количество криптовалют для отображения: ${cryptos.length}`);
-    console.log(`🔍 Список криптовалют:`, cryptos);
     const state = formType === 'deposit' ? this.depositState : this.withdrawState;
     if (state.recentCryptos.length > 0) {
       const recentSection = document.createElement('div');
@@ -1126,7 +712,6 @@ class FormManager {
       });
       container.appendChild(option);
     });
-    console.log(`✅ Рендеринг опций криптовалют завершен для ${containerId}`);
   }
 
   filterCryptos(query, formType) {
@@ -1145,7 +730,6 @@ class FormManager {
   }
 
   async selectCrypto(symbol, formType) {
-    console.log(`🔄 Выбираю криптовалюту: ${symbol} (${formType})`);
     
     const crypto = this.cryptoData[symbol];
     const state = formType === 'deposit' ? this.depositState : this.withdrawState;
@@ -1159,7 +743,6 @@ class FormManager {
     state.selectedCrypto = symbol;
     state.selectedNetwork = null;
     
-    // Обновляем баланс при выборе криптовалюты для вывода
     if (formType === 'withdraw') {
       await this.updateWithdrawBalance(symbol);
     }
@@ -1215,15 +798,11 @@ class FormManager {
   
     try {
       const crypto = this.cryptoData[cryptoSymbol];
-      console.log(`🔄 Загружаю сети для ${cryptoSymbol}...`);
   
-      // 🚀 берём именно symbol из balances
       const networksData = await this.walletApi.getCurrencyNetworks(crypto.symbol);
-      console.log(`📊 Полученные данные сетей для ${cryptoSymbol}:`, networksData);
   
       let networks = [];
       if (networksData.status === 'success' && networksData.networks) {
-        // Согласно OpenAPI, networks - это массив строк
         if (Array.isArray(networksData.networks)) {
           networks = networksData.networks.map(networkName => ({
             name: networkName,
@@ -1236,7 +815,6 @@ class FormManager {
             address: ''
           }));
         } else {
-          // Fallback для случая, если networks - объект
           networks = Object.entries(networksData.networks).map(([code, name]) => ({
             name,
             code,
@@ -1288,12 +866,8 @@ class FormManager {
         container.appendChild(option);
       });
     } catch (error) {
-      console.error(`❌ Ошибка загрузки сетей для ${cryptoSymbol}:`, error);
       
-      // Проверяем, является ли ошибка связанной с авторизацией
       if (error.message.includes('401') || error.message.includes('Authorization')) {
-        console.warn(`⚠️ Ошибка авторизации при загрузке сетей для ${cryptoSymbol}`);
-        // Не показываем уведомление при загрузке
       }
       
       container.innerHTML = `
@@ -1307,7 +881,6 @@ class FormManager {
   
 
   selectNetwork(cryptoSymbol, network, index, formType) {
-    console.log(`🔄 Выбираю сеть: ${network.name} для ${cryptoSymbol} (${formType})`);
     
     const state = formType === 'deposit' ? this.depositState : this.withdrawState;
     const selectId = formType === 'deposit' ? 'network-select' : 'withdraw-network-select';
@@ -1317,13 +890,10 @@ class FormManager {
       select.input.value = network.name;
       select.isOpen = false;
       this.updateSelectVisibility(selectId);
-      console.log(`✅ Обновлен селект сети: ${network.name}`);
     }
     
     state.selectedNetwork = network;
-    console.log(`📝 Сохранена выбранная сеть в состоянии:`, network);
     
-    // Принудительно обновляем контент при смене сети
     this.refreshContent(cryptoSymbol, network, formType);
     
     if (formType === 'deposit') {
@@ -1339,12 +909,9 @@ class FormManager {
     }
   }
 
-  // Функция для принудительного обновления контента при смене сети
   async refreshContent(cryptoSymbol, network, formType) {
-    console.log(`🔄 Обновляю контент для ${cryptoSymbol} на сети ${network.name} (${formType})`);
     
     if (formType === 'deposit') {
-      // Обновляем детали депозита
       const elements = {
         'selected-crypto-note': cryptoSymbol,
         'selected-network-note': network.name,
@@ -1360,15 +927,12 @@ class FormManager {
         const element = document.getElementById(id);
         if (element) {
           element.textContent = value;
-          console.log(`✅ Обновлен элемент ${id}: ${value}`);
         }
       });
       
-      // Обновляем адрес при смене сети
       await this.updateDepositAddress(cryptoSymbol, network);
       
     } else {
-      // Обновляем детали вывода
       const elements = {
         'network-fee': network.networkFee,
         'min-withdraw': network.minWithdraw,
@@ -1379,118 +943,86 @@ class FormManager {
         const element = document.getElementById(id);
         if (element) {
           element.textContent = value;
-          console.log(`✅ Обновлен элемент ${id}: ${value}`);
         }
       });
       
-      // Обновляем баланс
       await this.updateWithdrawBalance(cryptoSymbol);
       
       this.updateReceiveAmount();
     }
   }
 
-  // Функция для обновления адреса депозита
   async updateDepositAddress(cryptoSymbol, network) {
     try {
-      console.log(`🔄 Обновляю адрес для ${cryptoSymbol} на сети ${network.name}`);
       
-      // Получаем новый адрес из API
       const walletData = await this.walletApi.getWalletInfo(cryptoSymbol);
       
       if (walletData.status === 'success' && walletData.address) {
         const addressInput = document.getElementById('deposit-address');
         if (addressInput) {
           addressInput.value = walletData.address;
-          console.log(`✅ Обновлен адрес: ${walletData.address}`);
           
-          // Генерируем новый QR код
           this.generateQRCode(walletData.address);
         }
       } else {
-        console.warn(`⚠️ Не удалось получить адрес для ${cryptoSymbol}`);
       }
     } catch (error) {
-      console.error(`❌ Ошибка обновления адреса для ${cryptoSymbol}:`, error);
     }
   }
 
-  // Функция для обновления баланса при выводе
   async updateWithdrawBalance(cryptoSymbol) {
     try {
-      console.log(`🔄 Обновляю баланс для ${cryptoSymbol}`);
       
-      // Получаем актуальный баланс из API
       const balancesData = await this.walletApi.getBalances();
       
       if (balancesData.status === 'success' && balancesData.balances && balancesData.balances[cryptoSymbol]) {
         const newBalance = balancesData.balances[cryptoSymbol];
         
-        // Обновляем в локальных данных
         if (this.cryptoData[cryptoSymbol]) {
           this.cryptoData[cryptoSymbol].balance = newBalance;
         }
         
-        // Обновляем отображение
         const balanceElement = document.getElementById('available-balance');
         const symbolElement = document.getElementById('available-symbol');
         
         if (balanceElement) {
           balanceElement.textContent = newBalance;
-          console.log(`💰 Обновлен баланс: ${newBalance}`);
         }
         if (symbolElement) {
           symbolElement.textContent = cryptoSymbol;
-          console.log(`🏷️ Обновлен символ: ${cryptoSymbol}`);
         }
       } else {
-        console.warn(`⚠️ Не удалось получить баланс для ${cryptoSymbol}`);
       }
     } catch (error) {
-      console.error(`❌ Ошибка обновления баланса для ${cryptoSymbol}:`, error);
     }
   }
 
   async updateDepositDetails(cryptoSymbol, network) {
     try {
-      console.log(`🔄 Загружаю информацию о кошельке для ${cryptoSymbol}...`);
-      // Получаем информацию о кошельке из API
       const walletData = await this.walletApi.getWalletInfo(cryptoSymbol);
-      console.log(`📊 Данные кошелька для ${cryptoSymbol}:`, walletData);
       
       if (walletData.status === 'success') {
-        console.log(`✅ Успешно получен адрес: ${walletData.address}`);
         const addressInput = document.getElementById('deposit-address');
         if (addressInput) {
           addressInput.value = walletData.address || network.address;
-          console.log(`📝 Установлен адрес в поле: ${addressInput.value}`);
         }
         
-        // Обновляем баланс из API
         if (walletData.balance) {
           this.cryptoData[cryptoSymbol].balance = walletData.balance;
-          console.log(`💰 Обновлен баланс: ${walletData.balance}`);
-          // Обновляем отображение баланса если он показан на странице
           const balanceElement = document.getElementById('available-balance');
           if (balanceElement) {
             balanceElement.textContent = walletData.balance;
           }
         }
       } else {
-        console.log(`❌ Ошибка API: ${walletData.msg || 'Неизвестная ошибка'}`);
       }
     } catch (error) {
-      console.error('❌ Ошибка получения информации о кошельке:', error);
-      // Не показываем ошибку пользователю, только в консоль
-      // Fallback на статические данные
       const addressInput = document.getElementById('deposit-address');
       if (addressInput) {
         addressInput.value = network.address;
-        console.log(`🔄 Использую fallback адрес: ${network.address}`);
       }
     }
 
-    // Безопасно обновляем элементы с проверкой их существования
     const elements = {
       'selected-crypto-note': cryptoSymbol,
       'selected-network-note': network.name,
@@ -1506,29 +1038,21 @@ class FormManager {
       const element = document.getElementById(id);
       if (element) {
         element.textContent = value;
-        console.log(`✅ Обновлен элемент ${id}: ${value}`);
       } else {
-        console.warn(`⚠️ Элемент ${id} не найден`);
       }
     });
     
     const addressInput = document.getElementById('deposit-address');
-    console.log(`🔍 Проверяю адрес для QR кода:`, addressInput);
     if (addressInput) {
-      console.log(`📝 Значение адреса: "${addressInput.value}"`);
       if (addressInput.value) {
-        console.log(`✅ Адрес найден, генерирую QR код`);
         this.generateQRCode(addressInput.value);
       } else {
-        console.log(`❌ Адрес пустой, не могу сгенерировать QR код`);
       }
     } else {
-      console.log(`❌ Элемент deposit-address не найден`);
     }
   }
 
   updateWithdrawDetails(cryptoSymbol, network) {
-    // Безопасно обновляем элементы с проверкой их существования
     const elements = {
       'network-fee': network.networkFee,
       'min-withdraw': network.minWithdraw,
@@ -1539,22 +1063,17 @@ class FormManager {
       const element = document.getElementById(id);
       if (element) {
         element.textContent = value;
-        console.log(`✅ Обновлен элемент ${id}: ${value}`);
       } else {
-        console.warn(`⚠️ Элемент ${id} не найден`);
       }
     });
     
-    // Обновляем баланс
     const balanceElement = document.getElementById('available-balance');
     const symbolElement = document.getElementById('available-symbol');
     if (balanceElement && this.cryptoData[cryptoSymbol]) {
       balanceElement.textContent = this.cryptoData[cryptoSymbol].balance || '0';
-      console.log(`💰 Обновлен баланс: ${this.cryptoData[cryptoSymbol].balance}`);
     }
     if (symbolElement) {
       symbolElement.textContent = cryptoSymbol;
-      console.log(`🏷️ Обновлен символ: ${cryptoSymbol}`);
     }
     
     this.updateReceiveAmount();
@@ -1582,20 +1101,15 @@ class FormManager {
   }
 
   generateQRCode(address) {
-    console.log(`🔄 Генерирую QR код для адреса: ${address}`);
     const qrContainer = document.getElementById('qr-code');
     if (!qrContainer) {
-      console.error('❌ Контейнер QR кода не найден');
       return;
     }
     if (!address) {
-      console.error('❌ Адрес для QR кода не предоставлен');
       return;
     }
 
-    console.log(`✅ Генерирую QR код для адреса: ${address}`);
     
-    // Создаем простой QR код без внешних зависимостей
     const qrCode = this.createSimpleQRCode(address);
     
     qrContainer.innerHTML = `
@@ -1606,18 +1120,14 @@ class FormManager {
         <div class="text-xs text-gray-400 mt-2 text-center break-all max-w-32">${address}</div>
       </div>
     `;
-    console.log(`✅ QR код сгенерирован и отображен`);
   }
 
-  // Простая функция для создания QR кода без внешних зависимостей
   createSimpleQRCode(text) {
-    // Создаем простой паттерн QR кода (для демонстрации)
     const size = 8;
     let html = '<div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 1px; width: 100%; height: 100%;">';
     
     for (let i = 0; i < size; i++) {
       for (let j = 0; j < size; j++) {
-        // Создаем простой паттерн на основе текста
         const shouldFill = (i + j + text.length) % 3 === 0 || 
                           (i === 0 && j === 0) || 
                           (i === size-1 && j === 0) || 
@@ -1856,7 +1366,6 @@ class FormManager {
     try {
       const txData = await this.walletApi.getTransactions();
   
-      // 🚀 берём либо transactions, либо data
       const txs = txData.transactions || txData.data || [];
   
       depositsTableBody.innerHTML = '';
@@ -1885,7 +1394,6 @@ class FormManager {
         }
       });
     } catch (error) {
-      console.error('❌ Ошибка загрузки транзакций:', error);
       showEmptyTableState();
     }
   }
@@ -2098,66 +1606,34 @@ class SidebarManager {
 
 async function loadTransactionsFromApi() {
   try {
-    console.log('🔄 Начинаю загрузку транзакций...');
     const walletApi = new WalletApiService();
     const transactionsData = await walletApi.getTransactions();
     
-    console.log('📊 Полученные данные транзакций:', transactionsData);
     
     if (transactionsData.status === 'success' && transactionsData.transactions && transactionsData.transactions.length > 0) {
-      console.log(`✅ Найдено ${transactionsData.transactions.length} транзакций`);
       renderTransactionsTable(transactionsData.transactions);
     } else {
-      console.log('ℹ️ Нет транзакций или пустой ответ');
       showEmptyTableState();
     }
   } catch (error) {
-    console.error('❌ Ошибка загрузки транзакций:', error);
-    
-    // Проверяем, является ли ошибка связанной с авторизацией
-    if (error.message.includes('401') || error.message.includes('Authorization')) {
-      console.warn('⚠️ Ошибка авторизации при загрузке транзакций');
-      // Не показываем уведомление при загрузке
-    }
     
     showEmptyTableState();
   }
 }
 
 function renderTransactionsTable(transactions) {
-  console.log('🔄 Начинаю рендеринг таблицы транзакций...');
-  console.log('📊 Полученные транзакции:', transactions);
   
   const depositsTableBody = document.getElementById('deposits-table-body');
   const withdrawalsTableBody = document.getElementById('withdrawals-table-body');
   
-  console.log('🔍 Поиск элементов таблиц:');
-  console.log('- depositsTableBody:', depositsTableBody);
-  console.log('- withdrawalsTableBody:', withdrawalsTableBody);
   
   if (!depositsTableBody || !withdrawalsTableBody) {
-    console.error('❌ Не найдены элементы таблиц транзакций');
     return;
   }
   
-  // Разделяем транзакции на депозиты и выводы
   const deposits = transactions.filter(tx => tx.direction === 'in');
   const withdrawals = transactions.filter(tx => tx.direction === 'out');
-  
-  console.log('📊 Фильтрация транзакций:');
-  console.log(`- Всего транзакций: ${transactions.length}`);
-  console.log(`- Депозиты (in): ${deposits.length}`);
-  console.log(`- Выводы (out): ${withdrawals.length}`);
-  console.log('🔍 Примеры транзакций:');
-  transactions.forEach((tx, index) => {
-    console.log(`  ${index}: direction=${tx.direction}, currency=${tx.currency}, amount=${tx.amount}`);
-  });
-  
-  // Рендерим депозиты
-  console.log(`🔄 Рендерю ${deposits.length} депозитов...`);
   const depositsHTML = deposits.map((item, index) => {
-    console.log(`📊 Обрабатываю депозит ${index + 1}:`, item);
-    
     const crypto = cryptoData[item.currency] || {
       name: item.currency,
       symbol: item.currency,
@@ -2195,18 +1671,12 @@ function renderTransactionsTable(transactions) {
       </tr>
     `;
     
-    console.log(`✅ Строка депозита ${index + 1} сгенерирована`);
     return rowHTML;
   }).join('');
   
   depositsTableBody.innerHTML = depositsHTML;
-  console.log(`✅ HTML депозитов установлен в таблицу`);
   
-  // Рендерим выводы
-  console.log(`🔄 Рендерю ${withdrawals.length} выводов...`);
   const withdrawalsHTML = withdrawals.map((item, index) => {
-    console.log(`📊 Обрабатываю вывод ${index + 1}:`, item);
-    
     const crypto = cryptoData[item.currency] || {
       name: item.currency,
       symbol: item.currency,
@@ -2244,27 +1714,12 @@ function renderTransactionsTable(transactions) {
       </tr>
     `;
     
-    console.log(`✅ Строка вывода ${index + 1} сгенерирована`);
     return rowHTML;
   }).join('');
   
   withdrawalsTableBody.innerHTML = withdrawalsHTML;
-  console.log(`✅ HTML выводов установлен в таблицу`);
   
-  console.log('✅ Рендеринг таблиц завершен');
-  console.log(`- Депозиты отрендерены: ${deposits.length} записей`);
-  console.log(`- Выводы отрендерены: ${withdrawals.length} записей`);
   
-  // Проверяем, что таблицы действительно обновились
-  const depositsTableBodyCheck = document.getElementById('deposits-table-body');
-  const withdrawalsTableBodyCheck = document.getElementById('withdrawals-table-body');
-  
-  if (depositsTableBodyCheck) {
-    console.log(`📊 Содержимое таблицы депозитов: ${depositsTableBodyCheck.children.length} строк`);
-  }
-  if (withdrawalsTableBodyCheck) {
-    console.log(`📊 Содержимое таблицы выводов: ${withdrawalsTableBodyCheck.children.length} строк`);
-  }
 }
 
 function formatDate(dateString) {
@@ -2285,7 +1740,6 @@ function formatDate(dateString) {
 
 document.addEventListener('DOMContentLoaded', async function() {
   try {
-    // Показываем индикатор загрузки
     const loadingIndicator = document.createElement('div');
     loadingIndicator.id = 'loading-indicator';
     loadingIndicator.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
@@ -2297,77 +1751,35 @@ document.addEventListener('DOMContentLoaded', async function() {
     `;
     document.body.appendChild(loadingIndicator);
 
-    // Проверяем авторизацию
-    console.log('🔐 Проверяю авторизацию...');
     try {
       const sessionResponse = await fetch('https://apiexchange.ymca.one/session', {
         method: 'GET',
         credentials: 'include'
       });
       const sessionData = await sessionResponse.json();
-      console.log('📊 Данные сессии:', sessionData);
-      
+
       if (sessionData.status !== 'success') {
-        console.warn('⚠️ Пользователь не авторизован');
-        // Не показываем уведомление при загрузке, только при ошибках API
       } else {
-        console.log('✅ Пользователь авторизован');
       }
     } catch (error) {
-      console.error('❌ Ошибка проверки сессии:', error);
     }
 
     const sidebarManager = new SidebarManager();
     sidebarManager.init();
-      
+
     const fm = new FormManager();
     await fm.init();
-    
-    // Тестируем API без авторизации
-    await testApiWithoutAuth();
-    
-    // Тестируем получение адреса кошелька
-    await testWalletAddress();
-    
-    // Тестируем получение сетей
-    await testNetworks();
-    
-    // Проверяем элементы HTML
-    checkHTMLElements();
-    
-    // Тестируем QR код
-    testQRCode();
-    
-    // Показываем все данные API в консоль
-    await showAllApiData();
-    
-    // Загружаем транзакции из API
+
     await loadTransactionsFromApi();
 
-  window.formManager = fm;
-  window.sidebarManager = sidebarManager;
-    
-    // Добавляем метод для обновления транзакций в FormManager
+    window.formManager = fm;
+    window.sidebarManager = sidebarManager;
+    window.walletApi = fm.walletApi;
+
     fm.refreshTransactions = async function() {
       await loadTransactionsFromApi();
     };
-    
-    // Добавляем глобальные функции для отладки
-    window.showAllApiData = showAllApiData;
-    window.testApiWithoutAuth = testApiWithoutAuth;
-    window.testWalletAddress = testWalletAddress;
-    window.testNetworks = testNetworks;
-    window.forceRefreshTransactions = forceRefreshTransactions;
-    window.forceRefreshAllData = forceRefreshAllData;
-    window.checkHTMLElements = checkHTMLElements;
-    window.testQRCode = testQRCode;
-    window.showAuthNotification = showAuthNotification;
-    window.walletApi = fm.walletApi;
-    window.formManager = fm;
   } catch (error) {
-    console.error('❌ Критическая ошибка при инициализации:', error);
-    
-    // Показываем критическую ошибку
     const errorDiv = document.createElement('div');
     errorDiv.className = 'fixed inset-0 bg-red-900 bg-opacity-90 flex items-center justify-center z-50';
     errorDiv.innerHTML = `
@@ -2382,7 +1794,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     `;
     document.body.appendChild(errorDiv);
   } finally {
-    // Убираем индикатор загрузки
     const loadingIndicator = document.getElementById('loading-indicator');
     if (loadingIndicator) {
       loadingIndicator.remove();

@@ -30,20 +30,20 @@
 </head>
 
 <body class="bg-black text-white font-sans">
-  <!-- Mobile Sidebar Toggle -->
+  
   <button class="mobile-sidebar-toggle lg:hidden" id="mobile-sidebar-toggle">
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
     </svg>
   </button>
 
-  <!-- Sidebar -->
+  
   <div id="sidebar"
     class="fixed left-0 top-0 h-screen w-60 bg-transparent transition-all duration-300 ease-in-out z-50 -translate-x-full lg:translate-x-0">
     <div class="flex flex-col h-full relative group pt-16">
-      <!-- Navigation -->
+      
       <nav class="flex-1 p-4 space-y-2">
-        <!-- Deposit -->
+        
         <button
           class="w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200 group relative text-[rgba(235,236,245,0.4)] hover:text-white"
           data-section="deposit">
@@ -60,7 +60,7 @@
           <span class="font-medium transition-opacity duration-300">Deposit</span>
         </button>
 
-        <!-- Withdraw -->
+        
         <button
           class="w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200 group relative text-[rgba(235,236,245,0.4)] hover:text-white "
           data-section="withdraw">
@@ -78,7 +78,7 @@
         </button>
       </nav>
 
-      <!-- Sidebar Toggle Button -->
+      
       <div
         class="absolute -right-5 top-0 h-full cursor-pointer px-5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
         <div class="h-full w-[1px] bg-[#232323]">
@@ -95,9 +95,9 @@
     </div>
   </div>
 
-  <!-- Main Content -->
+  
   <div class="transition-all duration-300 ease-in-out ml-60" id="main-content">
-    <!-- Mobile Tabs -->
+    
     <div class="lg:hidden bg-[#111111] border-b border-[#232323] sticky top-0 z-40">
       <div class="flex">
         <button class="flex-1 py-4 px-6 text-center text-sm font-medium transition-all duration-200 text-[rgba(235,236,245,0.4)] hover:text-white hover:bg-[#1a1a1a]/30 border-b-2 border-transparent mobile-tab" data-section="deposit">
@@ -129,10 +129,10 @@
       </div>
     </div>
 
-    <!-- Deposit Section -->
+    
     <div id="deposit-section">
       <div class="lg:p-6 p-4">
-        <!-- Breadcrumb -->
+        
         <div class="text-xs text-gray-400 mb-2 flex items-center gap-2">
           <a href="#"
             class="text-xs font-normal cursor-pointer leading-[18px] text-[rgba(235,236,245,0.4)] hover:text-white transition-colors duration-200">Overview</a>
@@ -141,7 +141,7 @@
             class="text-xs font-normal cursor-pointer leading-[18px] text-white transition-colors duration-200" id="breadcrumb-section">Deposit</a>
         </div>
 
-        <!-- Header -->
+        
         <div class="flex justify-between items-center mb-8">
           <h1 class="text-3xl font-bold text-white" id="page-title">Deposit</h1>
           <a href="#" class="text-[#facc15] hover:text-[#e6b800] text-sm flex items-center gap-1 font-medium">
@@ -153,12 +153,12 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Main Form Section -->
+          
           <div class="lg:col-span-2">
-            <!-- Deposit Form -->
+            
             <div class="rounded-lg lg:p-6 lg:mb-6 mb-14">
   
-              <!-- Step 1: Select Crypto -->
+              
               <div
                 class="step-section mb-4 after:border-[#3c3d3d] after:absolute after:left-[10px] relative after:top-[22px] after:h-[calc(100%+10px)] after:border-l after:border-dashed"
                 id="step-1">
@@ -197,17 +197,17 @@
                       </div>
                     </div>
 
-                    <!-- Recently Selected Cryptos -->
+                    
                     <div class="recent-cryptos mt-3" id="recent-cryptos" style="display: none;">
                       <div class="flex flex-wrap gap-2">
-                        <!-- Recent items will be inserted here -->
+                        
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Step 2: Select Network -->
+              
               <div
                 class="step-section mb-6 after:border-[#3c3d3d] after:absolute after:left-[10px] relative after:top-[22px] after:h-[calc(100%+10px)] after:border-l after:border-dashed"
                 id="step-2">
@@ -242,7 +242,7 @@
                 </div>
               </div>
 
-              <!-- Step 3: Deposit Address -->
+              
               <div class="step-section mb-4" id="step-3">
                 <label class="flex items-center font-medium mb-2 gap-3 text-[18px] leading-[24px] text-[#ebecf566]">
                   <span
@@ -250,7 +250,7 @@
                   Deposit Address & QR Code
                 </label>
                 <div class="step-content ml-8" id="step-3-content" style="display: none;">
-                  <!-- Address Section -->
+                  
                   <div
                       class="address-box border border-[#3c3d3d] rounded-lg p-4 mb-4 flex justify-between items-center gap-6 flex-wrap">
                     <div class="inline-block p-4 bg-white rounded-lg">
@@ -275,7 +275,7 @@
                     </div>
                   </div>
 
-                  <!-- Deposit Details -->
+                  
                   <div class="space-y-2 text-xs">
                     <div class="flex justify-between">
                       <span class="text-[#ebecf566]">Deposit To</span>
@@ -303,7 +303,7 @@
             </div>
           </div>
 
-          <!-- FAQ Section -->
+          
           <div class="lg:col-span-1">
             <div class="w-full max-w-[520px] rounded-[12px] border-[1px] border-[#3c3d3d] p-[24px]">
               <div class="flex justify-between items-center mb-4">
@@ -378,7 +378,7 @@
           </div>
         </div>
 
-        <!-- All Deposits Section -->
+        
         <div class="rounded-lg lg:p-6">
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-[16px] font-semibold pb-2 inline-block border-b border-[#2d2d2e] after:mt-[8px] after:block after:h-[2px] after:w-[32px] text-dark-label  after:bg-[#facc15] relative after:absolute after:left-1/2 after:-translate-x-1/2">All Deposits</h3>
@@ -415,10 +415,10 @@
       </div>
     </div>
 
-    <!-- Withdraw Section -->
+    
     <div id="withdraw-section" class="section-hidden">
       <div class="lg:p-6 p-4">
-        <!-- Breadcrumb -->
+        
         <div class="text-xs text-gray-400 mb-2 flex items-center gap-2">
           <a href="#"
             class="text-xs font-normal cursor-pointer leading-[18px] text-[rgba(235,236,245,0.4)] hover:text-white transition-colors duration-200">Overview</a>
@@ -427,7 +427,7 @@
             class="text-xs font-normal cursor-pointer leading-[18px] text-white transition-colors duration-200">Withdraw</a>
         </div>
 
-        <!-- Header -->
+        
         <div class="flex justify-between items-center mb-8">
           <h1 class="text-3xl font-bold text-white">Withdraw</h1>
           <a href="#" class="text-[#facc15] hover:text-[#e6b800] font-medium flex items-center gap-2">
@@ -439,12 +439,12 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Main Form Section -->
+          
           <div class="lg:col-span-2">
-            <!-- Withdraw Form -->
+            
             <div class="rounded-lg lg:p-6 lg:mb-6 mb-14">
 
-              <!-- Step 1: Select Crypto -->
+              
               <div
                 class="step-section mb-4 after:border-[#3c3d3d] after:absolute after:left-[10px] relative after:top-[22px] after:h-[calc(100%+10px)] after:border-l after:border-dashed"
                 id="withdraw-step-1">
@@ -483,17 +483,17 @@
                       </div>
                     </div>
 
-                    <!-- Recently Selected Cryptos -->
+                    
                     <div class="recent-cryptos mt-3" id="withdraw-recent-cryptos" style="display: none;">
                       <div class="flex flex-wrap gap-2">
-                        <!-- Recent items will be inserted here -->
+                        
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Step 2: Select Network -->
+              
               <div
                 class="step-section mb-6 after:border-[#3c3d3d] after:absolute after:left-[10px] relative after:top-[22px] after:h-[calc(100%+10px)] after:border-l after:border-dashed"
                 id="withdraw-step-2">
@@ -528,7 +528,7 @@
                 </div>
               </div>
 
-              <!-- Step 3: Withdrawal Details -->
+              
               <div class="step-section mb-4" id="withdraw-step-3">
                 <label class="flex items-center font-medium mb-2 gap-3 text-[18px] leading-[24px] text-[#ebecf566]">
                   <span
@@ -536,14 +536,14 @@
                   Withdrawal Details
                 </label>
                 <div class="step-content ml-8" id="withdraw-step-3-content" style="display: none;">
-                  <!-- Withdrawal Address -->
+                  
                   <div class="mb-4">
                     <label class="text-xs text-gray-400 block mb-2">Withdrawal Address</label>
                     <input type="text" id="withdraw-address" placeholder="Enter destination address"
                       class="w-full h-11 bg-[#0f0f0f] border border-[#232323] rounded px-3 py-2 text-sm text-white font-medium focus:border-[#facc15] focus:outline-none transition-colors duration-200">
                   </div>
 
-                  <!-- Amount Section -->
+                  
                   <div class="mb-4">
                     <div class="flex justify-between items-center mb-2">
                       <label class="text-xs text-gray-400">Amount</label>
@@ -561,7 +561,7 @@
                     </div>
                   </div>
 
-                  <!-- Network Details -->
+                  
                   <div class="space-y-2 text-xs mb-4">
                     <div class="flex justify-between">
                       <span class="text-[#ebecf566]">Network Fee</span>
@@ -581,7 +581,7 @@
                     </div>
                   </div>
 
-                  <!-- Withdrawal Button -->
+                  
                   <button id="withdraw-btn" type="button"
                     class="w-full bg-[#facc15] hover:bg-[#e6b800] text-black font-medium py-2 px-4 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                     Withdraw
@@ -591,7 +591,7 @@
             </div>
           </div>
 
-          <!-- FAQ Section -->
+          
           <div class="lg:col-span-1">
             <div class="w-full max-w-[520px] rounded-[12px] border-[1px] border-[#3c3d3d] p-[24px]">
               <div class="flex justify-between items-center mb-4">
@@ -666,7 +666,7 @@
           </div>
         </div>
         
-        <!-- All Withdrawals Section -->
+        
         <div class="rounded-lg lg:p-6">
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-[16px] font-semibold pb-2 inline-block border-b border-[#2d2d2e] after:mt-[8px] after:block after:h-[2px] after:w-[32px] text-dark-label  after:bg-[#facc15] relative after:absolute after:left-1/2 after:-translate-x-1/2">All Withdrawals</h3>
